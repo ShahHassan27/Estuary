@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { Button, Form } from 'semantic-ui-react';
 
 import gql from 'graphql-tag';
@@ -24,7 +24,8 @@ function PostForm() {
 				}
 			});
 			values.body = '';
-		}
+		},
+		onError(err) {}
 	});
 
 	function createPostCallback() {
@@ -32,15 +33,30 @@ function PostForm() {
 	}
 
 	return (
-		<Form onSubmit={onSubmit}>
-			<h2>Create a Post:</h2>
-			<Form.Field>
-				<Form.Input placeholder="Hi there!" name="body" onChange={onChange} value={values.body} />
-				<Button type="submit" color="teal">
-					Submit
-				</Button>
-			</Form.Field>
-		</Form>
+		<Fragment>
+			<Form onSubmit={onSubmit}>
+				<h2>Create a Post:</h2>
+				<Form.Field>
+					<Form.Input
+						placeholder="Hi there!"
+						name="body"
+						onChange={onChange}
+						value={values.body}
+						error={error ? true : false}
+					/>
+					<Button type="submit" color="teal">
+						Submit
+					</Button>
+				</Form.Field>
+			</Form>
+			{error && (
+				<div className=" ui error message" style={{ marginBottom: 20 }}>
+					<ul className="list">
+						<li>{error.graphQLErrors[0].message}</li>
+					</ul>
+				</div>
+			)}
+		</Fragment>
 	);
 }
 
